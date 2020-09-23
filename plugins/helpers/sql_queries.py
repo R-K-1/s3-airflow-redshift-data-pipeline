@@ -1,7 +1,7 @@
 class SqlQueries:
     songplay_table_insert = ("""
         SELECT
-                md5(events.sessionid || events.start_time) songplay_id,
+                md5(nvl(events.sessionid, 0) || events.start_time) songplay_id,
                 events.start_time, 
                 events.userid, 
                 events.level, 
@@ -12,7 +12,7 @@ class SqlQueries:
                 events.useragent
                 FROM (SELECT TIMESTAMP 'epoch' + ts/1000 * interval '1 second' AS start_time, *
             FROM staging_events
-            WHERE page='NextSong') events
+            WHERE page='NextSong' AND userid IS NOT NULL) events
             LEFT JOIN staging_songs songs
             ON events.song = songs.title
                 AND events.artist = songs.artist_name
