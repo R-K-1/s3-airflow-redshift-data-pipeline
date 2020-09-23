@@ -38,11 +38,25 @@ create_tables = PostgresOperator(
 
 stage_events_to_redshift = StageToRedshiftOperator(
     task_id='Stage_events',
+    redshift_conn_id='redshift',
+    aws_credentials_id='aws_credentials',
+    table='staging_events',
+    s3_bucket='udacity-dend',
+    s3_key='log_data/2018/11/2018-11-01-events.json',
+    copy_json_option='s3://udacity-dend/log_json_path.json',
+    region='us-west-2',
     dag=dag
 )
 
 stage_songs_to_redshift = StageToRedshiftOperator(
     task_id='Stage_songs',
+    redshift_conn_id='redshift',
+    aws_credentials_id='aws_credentials',
+    table='staging_songs',
+    s3_bucket='udacity-dend',
+    s3_key='song_data/A/A/A/TRAAAAK128F9318786.json',
+    copy_json_option='auto',
+    region='us-west-2',
     dag=dag
 )
 
