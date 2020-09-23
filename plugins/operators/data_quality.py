@@ -20,14 +20,14 @@ class DataQualityOperator(BaseOperator):
 
     def execute(self, context):
         self.log.info('DataQualityOperator implemented and running')
-        redshift_hook = PostgresHook(postgres_conn_id=self.redshift_conn_id)
+        redshift_hook_conn = PostgresHook(postgres_conn_id=self.redshift_conn_id)
         
-        self.log.info("Running test")
-        records = redshift_hook.get_records(self.test_query)
-        if records[0][0] != self.expected_result:
+        self.log.info("Running Data Quality test")
+        rows = redshift_hook_conn.get_records(self.test_query)
+        if rows[0][0] != self.expected_result:
             raise ValueError(f"""
-                Data quality check failed. \
-                {records[0][0]} does not equal {self.expected_result}
+                Data quality test failed. \
+                {rows[0][0]} does not equal {self.expected_result}
             """)
         else:
-            self.log.info("Data quality check passed")
+            self.log.info("Data quality test passed")

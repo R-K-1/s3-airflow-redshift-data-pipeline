@@ -36,15 +36,15 @@ class StageToRedshiftOperator(BaseOperator):
         self.region = region
 
     def execute(self, context):
-        self.log.info('StageToRedshiftOperator implemented')
+        self.log.info('StageToRedshiftOperator implemented and running')
         aws_hook = AwsHook(self.aws_credentials_id)
         credentials = aws_hook.get_credentials()
-        redshift_conn = PostgresHook(postgres_conn_id=self.redshift_conn_id)
+        redshift_hook_conn = PostgresHook(postgres_conn_id=self.redshift_conn_id)
         
-        self.log.info("Clearing data from destination Redshift DB table")
-        redshift_conn.run("DELETE FROM {}".format(self.table))
+        self.log.info("Clearing data from destination Redshift cluster DB table")
+        redshift_hook_conn.run("DELETE FROM {}".format(self.table))
         
-        self.log.info("Copying data from S3 to Redshift DB table")
+        self.log.info("Copying data from S3 to Redshift cluster DB table")
         rendered_key = self.s3_key.format(**context)
         s3_path = "s3://{}/{}".format(self.s3_bucket, rendered_key)
         formatted_sql_stm = StageToRedshiftOperator.copy_sql_template.format(
@@ -55,7 +55,7 @@ class StageToRedshiftOperator(BaseOperator):
             self.region,
             self.copy_json_option
         )
-        redshift_conn.run(formatted_sql_stm)
+        redshift_hook_conn.run(formatted_sql_stm)
 
 
 
