@@ -7,9 +7,6 @@ from airflow.operators import (StageToRedshiftOperator, LoadFactOperator,
                                 PostgresOperator)
 from helpers import SqlQueries
 
-# AWS_KEY = os.environ.get('AWS_KEY')
-# AWS_SECRET = os.environ.get('AWS_SECRET')
-
 default_args = {
     'owner': 'udacity',
     'start_date': datetime(2019, 1, 12),
@@ -104,6 +101,9 @@ load_time_dimension_table = LoadDimensionOperator(
 
 run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
+    redshift_conn_id='redshift',
+    test_query='select count(*) from songs where songid is null;',
+    expected_result=0,
     dag=dag
 )
 
