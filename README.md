@@ -24,7 +24,7 @@ The project contains the following components:
 		├── sql_queries.py # Defining prepared and reusable SQL queries
     ├── operators
 		├── __init__.py
-		├── data_quality.py # with `DataQualityOperator`, running data quality check by passing an SQL query and expected result as arguments, 									failing if the results don't match.
+		├── data_quality.py # with `DataQualityOperator`, running data quality check by passing an SQL query and expected result as arguments, failing if the results don't match.
 		├── load_dimension.py # with `LoadDimensionOperator`, loading a dimension table from data in the staging table(s).
 		├── load_fact.py # with `LoadFactOperator`, loading a fact table from data in the staging table(s).
 		└── stage_redshift.py # with `StageToRedshiftOperator`, copying JSON data from S3 to staging tables in the Redshift data warehouse
@@ -36,7 +36,3 @@ The following connection are expected
 
 * `aws_credentials`: AWS IAM user with read access to S3 bucket storing input data
 * `redshift`: connection object with all attributes necessary to connect to Redshift cluster
-
-* Make sure to add the following Airflow connections:
-    * AWS credentials
-    * Connection to Postgres database
